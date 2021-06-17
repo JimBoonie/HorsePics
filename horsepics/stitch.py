@@ -2,6 +2,12 @@ import os, warnings, errno
 import numpy as np
 from imageio import imread, imwrite
 
+try:
+    from tqdm import tqdm
+except ImportError:
+    tqdm = lambda x: x
+
+
 VALID_EXTS = ('.jpg', '.jpeg', '.png', '.tif', '.tiff', '.bmp',)
 
 def _list_files(loc, return_dirs=False, return_files=True, recursive=False, valid_exts=None):
@@ -394,7 +400,7 @@ def grid_crop_images(src_dir, dest_dir, crop_dims, recursive=True, stride_size=N
         print("number of imgs: %d" % len(file_list))
 
     # subcrop images to directory
-    for img_path in file_list:
+    for img_path in tqdm(file_list):
         # create destination if does not exist
         full_d = os.path.join(dest_dir, img_path.split('/')[-1])
         try: 
@@ -460,7 +466,7 @@ def stitch_images(src_dir, dest_dir, recursive=True, output_ext='.jpg', method='
 
     # subcrop images to directory
     len_output_ext = len(output_ext)
-    for d in dir_list:
+    for d in tqdm(dir_list):
         if verbose:
             print("Current dir: %s" % d)
 
